@@ -7,6 +7,7 @@ import { HiHome } from "react-icons/hi";
 import {BiSearch } from "react-icons/bi";
 import Box from "./Box" ;
 import Sidebaritem from "./SidebarItem";
+import Library from "./Library";
 
 
 import path from "path";
@@ -53,12 +54,12 @@ const Sidebar : React.FC<sidebarProps> = ({
             ">
                 <Box>
                     <div className="
-                    flex
-                    flex-col
-                    gap-y-4
-                    px-5
-                    py-4
-                    " >
+                         flex
+                         flex-col
+                         gap-y-4
+                         px-5
+                         py-4 " 
+                    >
                         {routes.map((item)=>(
                             <Sidebaritem
 
@@ -70,12 +71,15 @@ const Sidebar : React.FC<sidebarProps> = ({
                         </div> 
                 </Box>
                 <Box className="overflow-y-auto h-full">
-                    Song Library 
+                    <Library/> 
                 </Box>
                 <Box>
                     Sidebar Navigation 
                 </Box>
             </div>
+            <main className="h-full flex-1 overflow-y-auto py-2">
+                {children}
+            </main>
 
         </div>
     );
