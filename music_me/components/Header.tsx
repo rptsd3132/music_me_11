@@ -5,13 +5,14 @@ import { BiSearch } from "react-icons/bi";
 import { HiHome } from "react-icons/hi2";
 import { RxCaretLeft, RxCaretRight } from "react-icons/rx";
 import { twMerge } from "tailwind-merge";
+import Button from "./Button";
 
 interface HeaderProps{
-    childern : React.ReactNode;
+    children : React.ReactNode;
     className? : string;
 }
 const Header : React.FC<HeaderProps> = ( {
-    childern,
+    children,
     className 
     }) =>{
 
@@ -127,8 +128,45 @@ const Header : React.FC<HeaderProps> = ( {
                 </button>
 
             </div>
+                    <div
+                    className="
+                    flex
+                    justify-between
+                    items-center
+                    gap-x-4
+                    "
+                    >
+                        <>
+                        <div>
+                            <Button
+                            onClick={()=>{}}
+                            className="
+                            bg-transparent
+                            text-neutral-300
+                            font-medium
+                            "
+                            >
+                                sign up
+                            </Button>
 
+                        </div>
+                          <div>
+                            <Button
+                            onClick={()=>{}}
+                            className="
+                            bg-white
+                            px-6
+                            py-2
+                            "
+                            >
+                                log in
+                            </Button>
+
+                        </div>
+                        </>
+                    </div>
           </div>
+            {children}
 
         </div>
     );
