@@ -59,16 +59,16 @@ const Sidebar : React.FC<sidebarProps> = ({
                          gap-y-4
                          px-5
                          py-4 " 
-                    >
+                        >
                         {routes.map((item)=>(
                             <Sidebaritem
 
                             key={item.label}
-                        {...item }
+                             {...item }
                             />
                         ))}
 
-                        </div> 
+                    </div> 
                 </Box>
                 <Box className="overflow-y-auto h-full">
                     <Library/> 

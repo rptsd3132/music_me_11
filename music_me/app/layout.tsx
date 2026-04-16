@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import {Figtree} from "next/font/google";
 import  Sidebar from "../components/sidebar";
 import "./globals.css";
+import SupabaseProvider from "@/providers/SupabaseProvider";
 
 const font = Figtree({
   subsets: ["latin"],
@@ -20,12 +21,13 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${font.className} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">
-        <Sidebar>
-          {children}
-        </Sidebar>
+      <body className={`${font.className} h-full antialiased`}>
+        <SupabaseProvider>
+            <Sidebar>
+              {children}
+            </Sidebar>
+        </SupabaseProvider>
       </body>
     </html>
   );
