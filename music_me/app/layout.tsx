@@ -3,6 +3,7 @@ import {Figtree} from "next/font/google";
 import  Sidebar from "../components/sidebar";
 import "./globals.css";
 import SupabaseProvider from "@/providers/SupabaseProvider";
+import UserProvider from "@/providers/UserProvider";
 
 const font = Figtree({
   subsets: ["latin"],
@@ -24,9 +25,11 @@ export default function RootLayout({
     >
       <body className={`${font.className} h-full antialiased`}>
         <SupabaseProvider>
+          <UserProvider>
             <Sidebar>
               {children}
             </Sidebar>
+          </UserProvider>
         </SupabaseProvider>
       </body>
     </html>
