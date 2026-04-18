@@ -3,13 +3,10 @@ import Stripe from "stripe";
 
 export interface UserDetails {
     id : string;
-    first_name : string;
-    last_name : string;
-    full_name? : string;
-    avatae_url ?: string;
-    billing_address? : Stripe.Address;
-    payment_method? :Stripe.PaymentMethod[Stripe.PaymentMethod.Type];
-
+    full_name : string | null;
+    avatar_url : string | null;
+    billing_address : any;
+    payment_method : any;
 }
 
 export interface product {
@@ -43,7 +40,7 @@ export interface UserSettings {
     status?: Stripe.Subscription.Status;
     metadata?:Stripe.Metadata;
     price_id?: string;
-    quantity?: string;
+    quantity?: number;
     cancel_at_period_end?: boolean;
     created: string;
     current_period_start: string;
@@ -55,3 +52,5 @@ export interface UserSettings {
     trial_end?: string;
     prices?:Price;
 }
+
+export type Subscription = UserSettings;

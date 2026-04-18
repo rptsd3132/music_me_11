@@ -1,23 +1,17 @@
+"use client";
+
 import { createContext, useContext, useEffect, useState } from "react";
-
-import { useSessionContext ,
-     useUser  as useSupaUser}
-      from "@supabase/auth-helpers-react";
-
-
-import {Subscription, UserDetails} from "@/types"; 
-
-import { access } from "fs";
-
-import {User} from "@supabase/auth-helpers-nextjs"
+import { createBrowserClient } from "@supabase/ssr";
+import { Subscription, UserDetails } from "@/types";
+import type { User } from "@supabase/supabase-js";
+import { Database } from "@/database.types";
 
 type UserContextType = {
     accessToken: string| null;
     user : User | null;
     userDetails: UserDetails | null;
     isLoading: boolean;
-    subscrption : Subscription | null;
-
+    subscription : Subscription | null;
 };
 
 export const UserContext = createContext<UserContextType | undefined>(
@@ -29,19 +23,35 @@ export interface Props {
 };
 
 export const MyUserContextProvider = (props: Props) => {
-    const {
-        session,
-        isLoading: isLoadingUser,
-        supabaseClient : supabase
+    const [supabase] = useState(() =>
+        createBrowserClient<Database>(
+            process.env.NEXT_PUBLIC_SUPABASE_URL!,
+            process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+        )
+    );
 
+    const [isLoadingUser, setIsLoadingUser] = useState(true);
+    const [session, setSession] = useState<any>(null);
 
-    } = useSessionContext();
+    useEffect(() => {
+        supabase.auth.getSession().then(({ data }) => {
+            setSession(data.session);
+            setIsLoadingUser(false);
+        });
 
-const user = useSupaUser();
-const accessToken = session?.access_token ?? null;
-const [isLoadingData, setIsLoadingData] = useState(false);
-const [userDetails, setUserDetails] = useState<UserDetails | null>(null);
-const [subscription, setSubscription] = useState<Subscription | null>(null);
+        const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+            setSession(session);
+            setIsLoadingUser(false);
+        });
+
+        return () => subscription?.unsubscribe();
+    }, [supabase]);
+
+    const user = session?.user ?? null;
+    const accessToken = session?.access_token ?? null;
+    const [isLoadingData, setIsLoadingData] = useState(false);
+    const [userDetails, setUserDetails] = useState<UserDetails | null>(null);
+    const [subscription, setSubscription] = useState<Subscription | null>(null);
 
 const getUserDetails = () => supabase.from("users").select("*").single();
 const getSubscription = () => 
@@ -88,7 +98,7 @@ const getSubscription = () =>
             
 const value = {
     accessToken,
-    User,
+    user,
     userDetails,
     isLoading: isLoadingUser || isLoadingData,
     subscription

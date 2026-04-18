@@ -42,16 +42,16 @@ const Sidebar : React.FC<sidebarProps> = ({
     return (
         <div className = "flex h-full ">
             <div
-            className="
-              hidden
-              md:flex
-              flex-col
-              gap-y-2
-              bg-black
-              h-full
-              w-75
-              p-2
-            ">
+                 className="
+                 hidden
+                 md:flex
+                 flex-col
+                  gap-y-2
+                 bg-black
+                 h-full
+                w-75
+                p-2
+             ">
                 <Box>
                     <div className="
                          flex
