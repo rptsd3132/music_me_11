@@ -1,15 +1,13 @@
-import { PrivateUseCacheStore } from "next/dist/server/app-render/work-unit-async-storage.external";
 import Stripe from "stripe";
 
 export interface UserDetails {
-    id : string;
-    first_name : string;
-    last_name : string;
-    full_name? : string;
-    avatae_url ?: string;
-    billing_address? : Stripe.Address;
-    payment_method? :Stripe.PaymentMethod[Stripe.PaymentMethod.Type];
-
+    id: string;
+    first_name?: string;
+    last_name?: string;
+    full_name?: string;
+    avatar_url?: string;
+    billing_address?: Stripe.Address;
+    payment_method?: Stripe.PaymentMethod[Stripe.PaymentMethod.Type];
 }
 
 export interface product {
@@ -37,20 +35,20 @@ export interface Price {
     product?:product;
 }
 
-export interface UserSettings {
+export interface Subscription {
     id : string;
     user_id : string;
     status?: Stripe.Subscription.Status;
     metadata?:Stripe.Metadata;
     price_id?: string;
-    quantity?: string;
+    quantity?: number;
     cancel_at_period_end?: boolean;
     created: string;
     current_period_start: string;
     current_period_end: string;
-    ended_at: string;
-    cancel_at: string;
-    canceled_at: string;
+    ended_at?: string;
+    cancel_at?: string;
+    canceled_at?: string;
     trial_start?: string;
     trial_end?: string;
     prices?:Price;
