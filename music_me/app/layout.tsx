@@ -5,6 +5,7 @@ import "./globals.css";
 import SupabaseProvider from "@/providers/SupabaseProvider";
 import UserProvider from "@/providers/UserProvider";
 import ModalProvider from "@/providers/ModalProvider";
+import ToasterProvider from "@/providers/ToasterProider";
 
 const font = Figtree({
   subsets: ["latin"],
@@ -25,6 +26,7 @@ export default function RootLayout({
       lang="en"
     >
       <body className={`${font.className} h-full antialiased`}>
+        <ToasterProvider/>
         <SupabaseProvider>
           <UserProvider>
               <ModalProvider/>
