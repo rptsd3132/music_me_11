@@ -26,10 +26,10 @@ export default function RootLayout({
       lang="en"
     >
       <body className={`${font.className} h-full antialiased`}>
-        <ToasterProvider/>
         <SupabaseProvider>
           <UserProvider>
               <ModalProvider/>
+              <ToasterProvider/>
                   <Sidebar>
                   {children}
                   </Sidebar>

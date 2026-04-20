@@ -1,6 +1,6 @@
 "use client";
 
-import { useRouter } from "next/dist/client/components/navigation";
+import { useRouter } from "next/navigation";
 import Modal from "./Modal";
 import { useSupabaseClient } from "@/providers/SupabaseProvider";
 import { useContext, useEffect } from "react";

@@ -11,7 +11,7 @@ import Button from "./Button";
 import uniqid from "uniqid";
 
 
-import { toast } from "react-hot-toast/headless";
+import toast from "react-hot-toast";
 import { useUser } from "@/hooks/useUser";
 import { useRouter } from "next/navigation";
 import { useSupabaseClient } from "@/providers/SupabaseProvider";
@@ -60,10 +60,35 @@ const UploadModal = () =>{
 
             if (!imageFile || !SongsFile || !user){
                 toast.error('missing fields');
+                setIsLoading(false);
                 return;
             }
 
-            
+            // Validate file types and sizes
+            if (!SongsFile.type.includes('audio')) {
+                toast.error('Please upload a valid audio file');
+                setIsLoading(false);
+                return;
+            }
+
+            if (!imageFile.type.includes('image')) {
+                toast.error('Please upload a valid image file');
+                setIsLoading(false);
+                return;
+            }
+
+            if (SongsFile.size > 50 * 1024 * 1024) { // 50MB limit
+                toast.error('Song file is too large (max 50MB)');
+                setIsLoading(false);
+                return;
+            }
+
+            if (imageFile.size > 10 * 1024 * 1024) { // 10MB limit
+                toast.error('Image file is too large (max 10MB)');
+                setIsLoading(false);
+                return;
+            }
+
         const uniqueID = uniqid();
         // upload song 
 
@@ -74,8 +99,8 @@ const UploadModal = () =>{
 
         } = await supabaseClient
         .storage
-        .from('songs')
-        .upload(`Songs-${values.title}-${uniqueID}`, SongsFile, {
+        .from('Songs')
+        .upload(`${user.id}/song-${values.title}-${uniqueID}`, SongsFile, {
             cacheControl : '3600',
             upsert : false
 
@@ -84,8 +109,8 @@ const UploadModal = () =>{
 
         if (SongsError){
             setIsLoading(false);
-
-            return toast.error('failed to upload song');
+            console.error('Song upload error:', SongsError);
+            return toast.error(`Song upload failed: ${SongsError.message}`);
             
         }
 
@@ -98,7 +123,7 @@ const UploadModal = () =>{
         } = await supabaseClient
         .storage
         .from('images')
-        .upload(`image-${values.title}-${uniqueID}`, imageFile, {
+        .upload(`${user.id}/image-${values.title}-${uniqueID}`, imageFile, {
             cacheControl : '3600',
             upsert : false
 
@@ -107,8 +132,8 @@ const UploadModal = () =>{
 
         if (imageError){
             setIsLoading(false);
-
-            return toast.error('failed to upload image');
+            console.error('Image upload error:', imageError);
+            return toast.error(`Image upload failed: ${imageError.message}`);
             
         }
 
@@ -120,13 +145,14 @@ const UploadModal = () =>{
             user_id : user.id,
             title : values.title,
             author: values.author,
-            image_path: imageData.path,
-            songs_path: SongsData.path
+            image_path: imageData?.path || null,
+            songs_path: SongsData?.path || null
         });
 
         if (supabaseError){
             setIsLoading(false);
-            return toast.error(supabaseError.message);
+            console.error('Database insert error:', supabaseError);
+            return toast.error(`Failed to save song: ${supabaseError.message}`);
         }
 
 
@@ -136,17 +162,11 @@ const UploadModal = () =>{
         reset();
         uploadModal.onClose();
 
-
-
-
         } catch(error){
-            toast.error('something went wrong');
-        } finally{
+            console.error('Upload error:', error);
+            toast.error('Something went wrong: ' + (error instanceof Error ? error.message : 'Unknown error'));
             setIsLoading(false);
         }
-
-
-        // update supabase
     }
 
         return(

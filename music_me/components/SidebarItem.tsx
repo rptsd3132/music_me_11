@@ -1,4 +1,3 @@
-import { mdxCompile } from "next/dist/build/swc/generated-native";
 import Link from "next/link";
 import React from "react";
 import { IconType } from "react-icons";
@@ -43,7 +42,7 @@ const Sidebaritem : React.FC <SidebarItemProps>= ({
                 )}
           >
             <Icon size={26} />
-            <p className = "trunacate w-full" >
+            <p className = "truncate w-full" >
                 {label}  </p>
         </Link> )
 }

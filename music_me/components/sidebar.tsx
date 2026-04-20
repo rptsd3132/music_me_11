@@ -10,8 +10,6 @@ import Sidebaritem from "./SidebarItem";
 import Library from "./Library";
 
 
-import path from "path";
-
 interface sidebarProps {
     children : React.ReactNode;
 }
