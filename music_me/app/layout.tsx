@@ -6,6 +6,7 @@ import SupabaseProvider from "@/providers/SupabaseProvider";
 import UserProvider from "@/providers/UserProvider";
 import ModalProvider from "@/providers/ModalProvider";
 import ToasterProvider from "@/providers/ToasterProider";
+import getSongsByUserId from "@/actions/getSongByUserId";
 
 const font = Figtree({
   subsets: ["latin"],
@@ -16,21 +17,28 @@ export const metadata: Metadata = {
   description: "A music streaming app built with Next.js and Tailwind CSS.",
 };
 
-export default function RootLayout({
+export const revalidate = 0;
+
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+
+  const userSongs = await getSongsByUserId();
+
+
   return (
     <html
       lang="en"
     >
       <body className={`${font.className} h-full antialiased`}>
+        <ToasterProvider/>
         <SupabaseProvider>
           <UserProvider>
               <ModalProvider/>
-              <ToasterProvider/>
-                  <Sidebar>
+              
+                  <Sidebar songs={userSongs}>
                   {children}
                   </Sidebar>
           </UserProvider>

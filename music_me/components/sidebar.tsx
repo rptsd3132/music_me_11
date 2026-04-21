@@ -8,14 +8,17 @@ import {BiSearch } from "react-icons/bi";
 import Box from "./Box" ;
 import Sidebaritem from "./SidebarItem";
 import Library from "./Library";
+import { Song } from "@/types";
 
 
 interface sidebarProps {
     children : React.ReactNode;
+    songs: Song[]
 }
 
 const Sidebar : React.FC<sidebarProps> = ({ 
-    children
+    children,
+    songs
 
 
 
@@ -69,7 +72,7 @@ const Sidebar : React.FC<sidebarProps> = ({
                     </div> 
                 </Box>
                 <Box className="overflow-y-auto h-full">
-                    <Library/> 
+                    <Library songs={songs}/> 
                 </Box>
             </div>
             <main className="h-full flex-1 overflow-y-auto py-2">
