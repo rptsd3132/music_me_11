@@ -37,6 +37,8 @@ const {data, error} = await supabase
     console.log(error);
 
   }
+
+  
 return (data as any)  || [];
 
 }
