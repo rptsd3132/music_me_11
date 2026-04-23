@@ -4,7 +4,6 @@ import useGetSongById from "@/hooks/useGetSongById";
 import useLoadSongUrl from "@/hooks/useLoadSongUrl";
 import usePlayer from "@/hooks/usePlayer";
 import PlayerContent from "./PlayerContent";
-import { useEffect } from "react";
 
 
 const Player =()=>{
@@ -12,18 +11,6 @@ const Player =()=>{
     const {song} = useGetSongById (player.activeId);
 
     const songUrl = useLoadSongUrl(song!);
-
-    useEffect(() => {
-        console.log('Player component loaded:', {
-            activeId: player.activeId,
-            songLoaded: !!song,
-            songId: song?.id,
-            songPath: song?.song_path,
-            songUrlLoaded: !!songUrl,
-            songUrl: songUrl,
-            songUrlLength: songUrl?.length
-        });
-    }, [player.activeId, song, songUrl]);
 
     if(!song || !songUrl || !player.activeId){
         return (

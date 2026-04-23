@@ -9,7 +9,7 @@ import useOnPlay from "@/hooks/useOnPlay";
 import { HiSpeakerWave, HiSpeakerXMark , } from "react-icons/hi2";
 import Slider from "./Slider";
 import usePlayer from "@/hooks/usePlayer";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import useSound from "use-sound";
 
 
@@ -25,8 +25,6 @@ const PlayerContent: React.FC<PlayerContentProps> = ({
     const Player = usePlayer();
     const [volume, setVolume] = useState(1);
     const [isPlaying, setIsPlaying] = useState(false);
-    const playRef = useRef<() => void>(() => {});
-    const pauseRef = useRef<() => void>(() => {});
 
     const Icon = isPlaying ? BsPauseFill : BsPlayFill;
     const VolumeIcon = volume === 0 ? HiSpeakerXMark : HiSpeakerWave;
@@ -47,7 +45,7 @@ const PlayerContent: React.FC<PlayerContentProps> = ({
         Player.setId(nextSong);
     }
 
-    const onPlayPrevious = () => {
+      const onPlayPrevious = () => {
         if(Player.ids.length === 0){
             return;
         }
@@ -61,101 +59,34 @@ const PlayerContent: React.FC<PlayerContentProps> = ({
         Player.setId(previousSong);
     }
 
-    const [play, { pause, sound }] = useSound(
+    const [paly, { pause, sound }] = useSound(
         songUrl,
         {
             volume: volume,
-            onplay: () => {
-                console.log('Sound onplay triggered');
-                setIsPlaying(true);
-            },
+            onplay: () => setIsPlaying(true),
             onend: () => {
-                console.log('Sound onend triggered');
                 setIsPlaying(false);
                 onPlayNext();
             } ,
-            onpause: () => {
-                console.log('Sound onpause triggered');
-                setIsPlaying(false);
-            },
-            format: ["mp3"],
-            html5: true
+            onpause: () => setIsPlaying(false),
+            format: ["mp3"]
         }
     );
 
-    // Store references to play and pause
     useEffect(() => {
-        console.log('Updating play/pause refs - sound exists:', !!sound);
-        playRef.current = play;
-        pauseRef.current = pause;
-    }, [play, pause]);
+        sound?.play();
 
-    // Handle song playback
-    useEffect(() => {
-        console.log('Playback effect:', {
-            soundReady: !!sound,
-            songUrl: songUrl,
-            songUrlType: typeof songUrl,
-            songUrlLength: songUrl?.length,
-            activeId: Player.activeId,
-            songId: song.id,
-            songPath: song.song_path,
-            isCurrentSong: Player.activeId === song.id
-        });
-
-        if(!sound) {
-            console.log('Sound not ready yet');
-            return;
-        }
-
-        const isCurrentSong = Player.activeId === song.id;
-        
-        if (isCurrentSong && songUrl) {
-            console.log('Calling play function for:', song.id);
-            try {
-                playRef.current();
-                console.log('Play called successfully');
-            } catch (e) {
-                console.error('Error calling play:', e);
-            }
-        } else {
-            console.log('Pausing or not current song');
-            try {
-                pauseRef.current();
-            } catch (e) {
-                console.error('Error calling pause:', e);
-            }
-        }
-    }, [Player.activeId, song.id, sound, songUrl]);
-
-    useEffect(() => {
         return () => {
             sound?.unload();
         }
-    }, [sound]);
-
-    useEffect(() => {
-        if(sound) {
-            sound.volume(volume);
-        }
-    }, [volume, sound]);
+    },[sound]);
 
     const handlePlay = () => {
-        console.log('handlePlay called - isPlaying:', isPlaying, 'playRef:', !!playRef.current);
         if(!isPlaying){
-            console.log('Attempting to play');
-            try {
-                playRef.current();
-            } catch (e) {
-                console.error('Error in handlePlay:', e);
-            }
+            paly();
+
         }else{
-            console.log('Attempting to pause');
-            try {
-                pauseRef.current();
-            } catch (e) {
-                console.error('Error in handlePause:', e);
-            }
+            pause();
         }
     }
 
@@ -254,7 +185,6 @@ const PlayerContent: React.FC<PlayerContentProps> = ({
                     size = {34} />
                     <Slider
                     value={volume}
-                    onChange={(value) => setVolume(value)}
                     />
                 </div>
             </div>
