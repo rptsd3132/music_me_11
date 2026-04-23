@@ -48,12 +48,12 @@ const Modal: React.FC<ModalProps> =  ({
                 md:max-h-[85vh]
                 w-full
                 md:w-[90vw]
-                md:max-w-[450px]
+                md:max-w-[(450px)]
                 translate-x-[-50%]
                 translate-y-[-50%]
                 rounded-md
                 bg-neutral-800
-                p-[25px]
+                p-[(25px)]
                 focus:outline-none
             "
             >
@@ -83,8 +83,8 @@ const Modal: React.FC<ModalProps> =  ({
                     text-neutral-400
                     hover:text-neutral-300
                     absolute
-                    top-[10px]
-                    right-[10px]
+                    top-[(10px)]
+                    right-[(10px)]
                     appearance-none
                     items-center
                     justify-center

@@ -28,6 +28,8 @@ export default async function RootLayout({
 
   const userSongs = await getSongsByUserId();
 
+  // throw new Error('Test');
+
 
   return (
     <html

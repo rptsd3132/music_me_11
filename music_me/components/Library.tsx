@@ -5,6 +5,7 @@ import useAuthModal from "@/hooks/useAuthModal";
 import MedialItem from "./MediaItem";
 
 import { useUser } from "@/hooks/useUser";
+import useOnplay from "@/hooks/useOnPlay";
 
 import { AiOutlinePlus } from "react-icons/ai";
 import { TbPlaylist } from "react-icons/tb";
@@ -22,6 +23,8 @@ const Library: React.FC<LibraryProps> = ({
     const authModal = useAuthModal();
     const uploadModal = useUploadModal();
     const {user} = useUser();
+
+    const onPlay = useOnplay(songs);
 
     const onclick = () =>{
         if (!user){
@@ -91,7 +94,7 @@ const Library: React.FC<LibraryProps> = ({
                 {songs.map((item)=> (
                     
                     <MedialItem
-                    onClick={()=>{}}
+                    onClick={(id:string)=> onPlay(id)}
                     key={item.id}
                     data={item}
                     
