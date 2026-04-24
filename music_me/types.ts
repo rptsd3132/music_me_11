@@ -22,7 +22,7 @@ export interface UserDetails {
 
 export interface product {
     id : string;
-    activie?: boolean;
+    active?: boolean;
     name?: string;
     description?: string;
     image?: string;
