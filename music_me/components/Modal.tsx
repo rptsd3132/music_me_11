@@ -10,13 +10,15 @@ interface ModalProps {
     title : string;
     description : string;
     children : React.ReactNode;
+    showClose?: boolean;
 }
 const Modal: React.FC<ModalProps> =  ({
     isOpen,
     onChange,
     title,
     description,
-    children 
+    children,
+    showClose = true
 }) => {
     return(
        < Dialog.Root
@@ -77,6 +79,7 @@ const Modal: React.FC<ModalProps> =  ({
                 <div>
                     {children}
                 </div>
+                {showClose && (
                 <Dialog.Close>
                     <button 
                     className="
@@ -93,6 +96,7 @@ const Modal: React.FC<ModalProps> =  ({
                         <IoMdClose size={18}/>
                     </button>
                 </Dialog.Close>
+                )}
             </Dialog.Content>
             
         </Dialog.Portal>

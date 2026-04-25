@@ -94,7 +94,21 @@ const getSubscription = () =>
         }
 
 
-      },[user, isLoadingUser]); 
+      },[user, isLoadingUser]);
+
+      // Poll for subscription updates every 5 seconds after initial fetch
+      useEffect(() => {
+        if (!user || !userDetails) return;
+        
+        const interval = setInterval(async () => {
+          const { data, error } = await getSubscription();
+          if (!error && data) {
+            setSubscription(data as Subscription);
+          }
+        }, 5000);
+
+        return () => clearInterval(interval);
+      }, [user, userDetails]); 
             
 const value = {
     accessToken,

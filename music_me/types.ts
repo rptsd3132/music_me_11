@@ -1,6 +1,8 @@
 import { PrivateUseCacheStore } from "next/dist/server/app-render/work-unit-async-storage.external";
 import Stripe from "stripe";
 
+
+
 export interface Song {
 id : string;
 user_id : string;
@@ -43,6 +45,10 @@ export interface Price {
     trail_period_days?: number | null;
     metadata?:Stripe.Metadata;
     product?:product;
+}
+
+export interface ProductWithPrices extends product {
+    prices : Price[];
 }
 
 export interface UserSettings {

@@ -27,14 +27,15 @@ export const postData = async ({
 
     const res: Response = await fetch(url, {
         method : "POST",
-        headers : new Headers({'Cntent-Type' : 'application/json'}),
+        headers : new Headers({'Content-Type' : 'application/json'}),
         credentials : "same-origin",
         body : JSON.stringify(data)
     });
 
     if(!res.ok){
-        console.log('Error in POST', {url, data, res})
-        throw new Error(res.statusText);
+        const errorData = await res.json().catch(() => ({}));
+        console.log('Error in POST', {url, data, status: res.status, error: errorData})
+        throw new Error(errorData.error || res.statusText);
     }
 
     return res.json();

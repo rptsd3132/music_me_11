@@ -1,10 +1,10 @@
-import { Song } from "@/types";
+import { ProductWithPrices } from "@/types";
 import { Database } from "@/database.types";
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 
 
-const getSongs = async () : Promise<Song[]> => {
+const getActiveProductsWithPrices = async () : Promise<ProductWithPrices[]> => {
 const cookieStore = await cookies();
 
 const supabase = createServerClient<Database>(
@@ -28,23 +28,17 @@ const supabase = createServerClient<Database>(
   }
 );
 
-// Ensure we have a valid session before querying
-const { data: { session }, error: sessionError } = await supabase.auth.getSession();
-
-if (sessionError) {
-  console.error('Session error:', sessionError);
-  return [];
-}
-
 const {data, error} = await supabase
-  .from("Songs")
-  .select('*')
-  .order('created_at', {ascending : false});
+  .from("products")
+  .select('*,prices(*)')
+    .eq('active', true)
+    .eq('prices.active', true)
+    .order('metadata->index') 
+  .order('unit_amount', {foreignTable : 'prices'});
 
   if (error){
-    console.error('Error fetching songs:', error.message, error.details);
-    // Return empty array instead of throwing to allow page to load
-    return [];
+    console.log(error);
+
   }
 
   
@@ -52,7 +46,7 @@ return (data as any)  || [];
 
 }
 
-export default getSongs;
+export default getActiveProductsWithPrices;
 
 
 
