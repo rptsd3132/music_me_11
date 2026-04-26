@@ -96,19 +96,34 @@ const getSubscription = () =>
 
       },[user, isLoadingUser]);
 
-      // Poll for subscription updates every 5 seconds after initial fetch
+      // Poll for subscription updates - stop once found
       useEffect(() => {
-        if (!user || !userDetails) return;
+        if (!user) return;
+        if (subscription) return; // Stop if subscription already exists
+        
+        let pollCount = 0;
+        const maxPolls = 15; // Poll for max 30 seconds (15 × 2 sec intervals)
         
         const interval = setInterval(async () => {
+          pollCount++;
           const { data, error } = await getSubscription();
+          
           if (!error && data) {
             setSubscription(data as Subscription);
+            clearInterval(interval); // Stop polling once found
+            console.log('[useUser] Subscription found after', pollCount * 2, 'seconds');
+            return;
           }
-        }, 5000);
+          
+          // Stop polling after max attempts
+          if (pollCount >= maxPolls) {
+            clearInterval(interval);
+            console.log('[useUser] Stopped polling after 30 seconds');
+          }
+        }, 2000); // Check every 2 seconds instead of 5
 
         return () => clearInterval(interval);
-      }, [user, userDetails]); 
+      }, [user, subscription]); 
             
 const value = {
     accessToken,

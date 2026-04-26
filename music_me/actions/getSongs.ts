@@ -32,7 +32,12 @@ const supabase = createServerClient<Database>(
 const { data: { session }, error: sessionError } = await supabase.auth.getSession();
 
 if (sessionError) {
-  console.error('Session error:', sessionError);
+  console.error('[getSongs] Session error:', sessionError.message);
+  return [];
+}
+
+if (!session?.user?.id) {
+  console.warn('[getSongs] No authenticated user found');
   return [];
 }
 
@@ -42,12 +47,21 @@ const {data, error} = await supabase
   .order('created_at', {ascending : false});
 
   if (error){
-    console.error('Error fetching songs:', error.message, error.details);
+    console.error('[getSongs] RLS ERROR - Check Supabase RLS policies:', {
+      message: error.message,
+      code: error.code,
+      details: error.details
+    });
     // Return empty array instead of throwing to allow page to load
     return [];
   }
 
+  if (!data || data.length === 0) {
+    console.warn('[getSongs] No songs found in database');
+    return [];
+  }
   
+console.log('[getSongs] ✓ Successfully fetched', data.length, 'songs');
 return (data as any)  || [];
 
 }

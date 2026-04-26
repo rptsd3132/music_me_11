@@ -40,21 +40,31 @@ const AccountContent = () => {
      
     return(
         <div className="mb-7 px-60">
-            {!subscription && (
+            {isLoading && (
                 <div className="flex flex-col gap-y-4">
-                    <p > No active subscription found</p>
-                    <Button onClick={subscribeModal.onOpen}
-                    className="w-[(300px)]">Subscribe</Button>
+                    <p className="text-white font-semibold">Processing your subscription...</p>
+                    <p className="text-gray-400 text-sm">Loading your subscription status. You'll be redirected shortly.</p>
                 </div>
-            ) }
+            )}
 
-            {subscription && (
+            {!isLoading && !subscription && (
                 <div className="flex flex-col gap-y-4">
-                    <p> You are currently on the<b> {subscription?.prices?.product?.name}</b> plan</p>
+                    <p className="text-white font-semibold">No active subscription found</p>
+                    <p className="text-gray-400 text-sm">Subscribe to unlock all premium features</p>
+                    <Button onClick={subscribeModal.onOpen}
+                    className="w-[(300px)]">Go Premium</Button>
+                </div>
+            )}
+
+            {!isLoading && subscription && (
+                <div className="flex flex-col gap-y-4">
+                    <p className="text-white font-semibold">✓ Premium Account Active</p>
+                    <p className="text-white">Plan: <b>{subscription?.prices?.product?.name}</b></p>
+                    <p className="text-green-400 text-sm">You can now play any song and add to your library</p>
                     <Button 
-                    disabled={loading  || isLoading}
+                    disabled={loading}
                     onClick={redirectToCustomerPortal}
-                    className="w-[(300px)]">Open customer portal</Button>
+                    className="w-[(300px)]">Manage Subscription</Button>
                 </div>
             )}
         </div>
